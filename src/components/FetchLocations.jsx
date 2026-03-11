@@ -3,9 +3,14 @@ import { fetchLocations } from "../store/slices/locationSlice";
 
 
 function FetchLocations(){
+    const data=useSelector((state)=>state.map.data)
+    console.log(data)
     return(
         <>
-        <button>Get Loc. in 10km radius, lahore radius:10000 lat:31.558, lon:74.3507</button>
+        <button 
+        className="border-solid border-black border-2" 
+        onClick={()=>useDispatch(fetchLocations({radius:2000, lng:74.3507 , lat:31.558}))}
+        >Get Locations</button>
         </>
     )
 }

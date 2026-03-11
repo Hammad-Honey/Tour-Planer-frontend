@@ -10,10 +10,7 @@ function Counter() {
 
 
     const handleChange = (e) => {
-        if (e.target.value >= 1) setIncrementAmount(Number(e.target.value))
-
-
-    }
+        if (e.target.value >= 1) setIncrementAmount(Number(e.target.value))    }
     const resetAll = () => {
         setIncrementAmount(0);
         dispatch(reset());

@@ -1,3 +1,4 @@
+import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import Map from "./components/map/Map";
 import "./App.css";
@@ -16,19 +17,28 @@ function App() {
 
   return (
     <>
-      <div className="sidebar">
-        <div className="serach">
-          <SearchBar />
-          <Counter/>
-        </div>
-        <div className="resultTab h-160 overflow-y-auto">
-          <ResultView />
-        </div>
-      </div>
-      <div>
-        <Map />
-        <FetchLocations/>
-      </div>
+      <Routes>
+        <Route path="/" element={
+          <>
+
+            <div className="sidebar">
+              <div className="serach">
+                <SearchBar />
+                <Counter />
+              </div>
+              <div className="resultTab h-160 overflow-y-auto">
+                <ResultView />
+              </div>
+            </div>
+            <div>
+              <Map />
+            </div>
+          </>
+        } />
+        <Route path="/locations" element={<FetchLocations />} />
+      </Routes>
+
+
 
     </>
   );
