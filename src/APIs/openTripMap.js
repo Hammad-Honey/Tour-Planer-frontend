@@ -3,6 +3,7 @@ console.log(apiKey)
 
 export async function  getHistoricLocations(payload) 
 {
+    console.log("paylos in api", payload)
     const {radius, lng, lat} = payload
     const res= await fetch(`https://api.opentripmap.com/0.1/en/places/radius?radius=${radius}&lon=${lng}&lat=${lat}&kinds=historic&limit=50&apikey=${apiKey}`)
     const data = await res.json();
