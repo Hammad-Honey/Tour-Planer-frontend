@@ -4,6 +4,8 @@ import "./App.css";
 import SearchBar from "./components/search/SearchBar";
 import { useMap } from "./contexts/MapContext";
 import ResultView from "./components/ResultView/ResultView";
+import Counter from "./components/counter";
+import FetchLocations from './components/FetchLocations'
 
 
 
@@ -14,24 +16,19 @@ function App() {
 
   return (
     <>
-    <Provider store={store}>
-
-    
-
-        <div className="sidebar">
-          <div className="serach">
-            <SearchBar/>
-          </div>
-          <div className="resultTab h-160 overflow-y-auto">
-            <ResultView/>
-          </div>
+      <div className="sidebar">
+        <div className="serach">
+          <SearchBar />
+          <Counter/>
         </div>
-
-        <div>
-          <Map />
+        <div className="resultTab h-160 overflow-y-auto">
+          <ResultView />
         </div>
-
-    </Provider>
+      </div>
+      <div>
+        <Map />
+        <FetchLocations/>
+      </div>
 
     </>
   );
