@@ -7,6 +7,7 @@ import { useMap } from "./contexts/MapContext";
 import ResultView from "./components/ResultView/ResultView";
 import Counter from "./components/counter";
 import FetchLocations from './components/FetchLocations'
+import Signup from './Views/Signup/Signup'
 
 
 
@@ -18,6 +19,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/signup" element={<Signup/>}/>
         <Route path="/" element={
           <>
 

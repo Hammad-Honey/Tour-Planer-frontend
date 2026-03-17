@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { fetchLocations } from "../store/slices/locationSlice";
+import { fetchLocations, fetchCity } from "../store/slices/locationSlice";
 import { useEffect } from "react";
 
 
@@ -20,13 +20,24 @@ export const FetchLocations = () => {
         dispatch(
             fetchLocations(
                 {
-                    radius: 2000,
+                    radius: 20000,
                     lng: 74.3507,
-                    lat: 31.558
+                    lat: 31.558,
+                    kinds:'fortifications'
                 }
             ))
     }
+    const getCityLocation=async()=>{
+        dispatch(
+            fetchCity(
+                {
+                    city:'lahore',
+                }
+            )
+        )
+    }
 
+    
 
     return (
         <>
@@ -34,6 +45,11 @@ export const FetchLocations = () => {
                 className="border-solid border-black border-2"
                 onClick={()=> getLocations()}
             >Get Locations</button>
+            <div>
+                <button onClick={()=>{getCityLocation()}}>
+                    fetch City
+                </button>
+            </div>
         </>
     )
 }
