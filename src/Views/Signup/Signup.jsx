@@ -6,8 +6,7 @@ function Signup() {
     const [formData, setFormData] = useState({ firstName: "", lastName: "", userName: "", email: "", password: "" })
     const [showpassword, setShowPassword] = useState(false)
     const [formErr, setFormErr] = useState({})
-    const debounceRef = useRef(null)
-
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=<>?/\\|[\]{}~`])[^\s]+$/;
 
     useEffect(() => {
         console.log("Updated form data:", formData)
@@ -15,13 +14,65 @@ function Signup() {
 
     const handlechange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value.trim()}))
+        setFormData((prev) => ({ ...prev, [name]: value.trim() }))
+        setFormErr((prev) => ({ ...prev, [name]: "" })) // This to remove the warning
     }
 
 
+    const validate = () => {
+        const errors = {};
+        const regix = /^[a-zA-Z\s'-]{2,50}$/;
+        const emailRegix = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+
+        if (!formData.firstName) {
+            errors.firstName = "Enter firstname";
+        } else if (!regix.test(formData.firstName)) {
+            errors.firstName = "Invalid format";
+        }
+
+        if (!formData.lastName) {
+            errors.lastName = "Enter lastname";
+        }
+
+        if (!formData.userName) {
+            errors.userName = "Enter username";
+        }
+
+        if (!formData.email) {
+            errors.email = "Enter email";
+        } else if (!emailRegix.test(formData.email)) {
+            errors.email = "Invalid email";
+        }
+
+        if (!formData.password) {
+            errors.password = "Enter password";
+        } else if(formData.password.length<8) {
+            errors.password = "Passowrd Must be 8 or more characters";
+        } else if (!passwordRegex.test(formData.password)){
+            errors.password = "Use: A-Z, a-z, 0-9, and symbols";
+        }
+
+        return errors;
+    };
+
+
     const handleSubmit = (e) => {
+
         e.preventDefault();
-        setFormData({ firstName: "", lastName: "", userName: "", email: "", password: "" })
+        const errors = validate()
+        setFormErr(errors);
+
+
+        if (Object.keys(errors).length > 0) {
+            //And Send Request to API key
+            console.log("There are errors in your form", formErr)
+
+        }
+        else {
+            setFormData({ firstName: "", lastName: "", userName: "", email: "", password: "" })
+        }
+
     }
 
 
@@ -34,20 +85,20 @@ function Signup() {
                 <div className="w-full max-w-120 p-2 mx-auto bg-zinc-100 drop-shadow-lg rounded-md ">
                     <h1 className="p-4 text-center text-xl font-medium">User Signup Page</h1>
                     <div className="p-4">
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} >
                             <div className="flex gap-5">
                                 <div className="my-2 w-1/2">
                                     <div>
                                         <label className="flex justify-between">
-                                            First Name
-                                            <span className=""></span>
+                                            <p>First Name</p>{formErr.firstName ? <span className="text-xs bg-yellow-400 rounded-sm px-3 content-center">{formErr.firstName}</span> : null}
+
                                         </label>
                                     </div>
                                     <div>
                                         <input
+
                                             value={formData.firstName}
                                             type="text"
-                                            required
                                             name="firstName"
                                             onChange={handlechange}
                                             className="w-full p-2 rounded-md bg-white drop-shadow-xl"
@@ -58,14 +109,12 @@ function Signup() {
                                 <div className="my-2 w-1/2">
                                     <div>
                                         <label className="flex justify-between">
-                                            Last Name
-                                            <span className=""></span>
+                                            <p>Last Name</p>{formErr.lastName ? <span className="text-xs bg-yellow-400 rounded-sm px-3 content-center">{formErr.lastName}</span> : null}
                                         </label>
                                     </div>
                                     <div>
                                         <input
                                             className="w-full p-2 rounded-md bg-white drop-shadow-xl"
-                                            required
                                             value={formData.lastName}
                                             type="text"
                                             name="lastName"
@@ -78,14 +127,13 @@ function Signup() {
                             <div className="my-2">
                                 <div>
                                     <label className="flex justify-between">
-                                        <p>Username</p>
-                                        {formErr.userName ? <span className="text-xs bg-yellow-400 rounded-xl px-3 content-center">{formErr.userName}</span> : null}
+                                        <p>Username</p>{formErr.userName ? <span className="text-xs bg-yellow-400 rounded-sm px-3 content-center">{formErr.userName}</span> : null}
+
                                     </label>
                                 </div>
                                 <div>
                                     <input
                                         className="w-full p-2 rounded-md bg-white drop-shadow-xl"
-                                        required
                                         type="text"
                                         value={formData.userName}
                                         name="userName"
@@ -97,14 +145,13 @@ function Signup() {
                             <div className="my-2">
                                 <div>
                                     <label className="flex justify-between">
-                                        Email
-                                        <span className=""></span>
+                                        <p>email</p>{formErr.email ? <span className="text-xs bg-yellow-400 rounded-sm px-3 content-center">{formErr.email}</span> : null}
+
                                     </label>
                                 </div>
                                 <div>
                                     <input
                                         className="w-full p-2 rounded-md bg-white drop-shadow-xl"
-                                        required
                                         type="email"
                                         name="email"
                                         value={formData.email}
@@ -116,8 +163,7 @@ function Signup() {
                             <div className="my-2">
                                 <div>
                                     <label className="flex justify-between">
-                                        Password
-                                        <span className=""></span>
+                                        <p>Password</p>{formErr.password ? <span className="text-xs bg-yellow-400 rounded-sm px-3 content-center">{formErr.password}</span> : null}
                                     </label>
                                 </div>
                                 <div className="relative">
@@ -126,8 +172,6 @@ function Signup() {
                                         className="w-full p-2 pr-12 rounded-md bg-white drop-shadow-xl"
                                         type={showpassword ? "text" : "password"}
                                         name="password"
-                                        required
-                                        minLength={8}
                                         value={formData.password}
                                         autoComplete="new-password"
                                         onChange={handlechange}

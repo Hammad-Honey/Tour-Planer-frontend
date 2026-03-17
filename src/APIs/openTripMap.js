@@ -33,7 +33,7 @@ export async function getCityLocation(payload) {
         const res = await fetch(`https://api.opentripmap.com/0.1/en/places/geoname?name=${city}&apikey=${apiKey}`)
         const data = await res.json();
         console.log(data)
-        if(!res.ok || data.error){   
+        if(!res.ok || data.error){    
             console.log(data)
             return data.error
         }
