@@ -8,6 +8,7 @@ import ResultView from "./components/ResultView/ResultView";
 import Counter from "./components/counter";
 import FetchLocations from './components/FetchLocations'
 import Signup from './Views/Signup/Signup'
+import Login from "./Views/Login/Login";
 
 
 
@@ -19,6 +20,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/" element={
           <>

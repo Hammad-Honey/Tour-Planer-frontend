@@ -1,7 +1,7 @@
 import { isRejectedWithValue } from "@reduxjs/toolkit";
 
 const apiKey = import.meta.env.VITE_OPEN_TRIP_MAP_API_KEY
-
+ 
 
 export async function getHistoricLocations(payload) {
     try {

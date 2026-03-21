@@ -37,6 +37,8 @@ function Signup() {
 
         if (!formData.userName) {
             errors.userName = "Enter username";
+        }else if (formData.userName.includes("@")){
+            errors.userName="Must Not inclues @"
         }
 
         if (!formData.email) {
