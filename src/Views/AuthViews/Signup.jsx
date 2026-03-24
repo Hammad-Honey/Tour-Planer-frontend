@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { signupUser } from "../../../APIs/auth"
 
 
 function Signup() {
+    const navigate=useNavigate()
     const [formData, setFormData] = useState({ firstName: "", lastName: "", userName: "", email: "", password: "" })
     const [showpassword, setShowPassword] = useState(false)
     const [formErr, setFormErr] = useState({})
@@ -37,8 +40,8 @@ function Signup() {
 
         if (!formData.userName) {
             errors.userName = "Enter username";
-        }else if (formData.userName.includes("@")){
-            errors.userName="Must Not inclues @"
+        } else if (formData.userName.includes("@")) {
+            errors.userName = "Must Not inclues @"
         }
 
         if (!formData.email) {
@@ -49,9 +52,9 @@ function Signup() {
 
         if (!formData.password) {
             errors.password = "Enter password";
-        } else if(formData.password.length<8) {
+        } else if (formData.password.length < 8) {
             errors.password = "Passowrd Must be 8 or more characters";
-        } else if (!passwordRegex.test(formData.password)){
+        } else if (!passwordRegex.test(formData.password)) {
             errors.password = "Use: A-Z, a-z, 0-9, and symbols";
         }
 
@@ -59,20 +62,31 @@ function Signup() {
     };
 
 
-    const handleSubmit = (e) => {
-
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const errors = validate()
+        const errors = validate();
         setFormErr(errors);
-
+        let data;
 
         if (Object.keys(errors).length > 0) {
-            //And Send Request to API key
             console.log("There are errors in your form", formErr)
-
         }
         else {
-            setFormData({ firstName: "", lastName: "", userName: "", email: "", password: "" })
+            
+            data= await signupUser(formData)
+            if (data.success == true) {
+                console.log("success msg",data)
+                setFormData({ firstName: "", lastName: "", userName: "", email: "", password: "" })
+                navigate("/login")
+                
+
+            } else {
+                console.log("Stringifid data",JSON.stringify(data))
+                alert(`${data.message}`);
+                
+ 
+            }
+
         }
 
     }

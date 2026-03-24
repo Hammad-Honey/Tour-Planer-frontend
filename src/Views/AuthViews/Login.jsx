@@ -1,6 +1,6 @@
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { Formik, useFormik } from "formik";
-import { loginUser } from "../../APIs/auth";
+import { loginUser } from "../../../APIs/auth";
 
 
 function Login() {
@@ -25,9 +25,18 @@ function Login() {
             return errors
 
         },
-        onSubmit:(values)=>{
+        onSubmit:async (values)=>{
             console.log("form Data", values);
-            loginUser(values)
+            console.log("Login parms",values)
+            const data= await loginUser(values)
+            if(data.user){
+                console.log("first if data: ",data)
+                {localStorage.setItem("user",JSON.stringify(data.user));}
+
+            }else{
+                
+                console.log("login", data)
+            }
 
 
         }
