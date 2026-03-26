@@ -1,12 +1,11 @@
-import { Routes, Route} from "react-router-dom";
-import AuthRoutes from "../routes/AuthRoutes";
-// import { Fragment } from "react";
+import { Routes, Route } from "react-router-dom";
+import UserRoutes from "../routes/UserRoutes";
 
-function AuthLayout() {
+function UserLayout() {
 
     const getRoutes = (route) => {
         return route.map((prop, key) => {
-            if (prop.layout === "auth") {
+            if (prop.layout === "user") {
                 return (
                     <Route
                         path={prop.path}
@@ -20,17 +19,17 @@ function AuthLayout() {
     };
 
 
-console.log("Auth Layout running")
-return (
-    <>
+    console.log("User Layout running")
+    return (
+        <>
 
-    
-        <Routes>
-            {getRoutes(AuthRoutes)}
-        </Routes>
-    </>
 
-)
+            <Routes>
+                {getRoutes(UserRoutes)}
+            </Routes>
+        </>
+
+    )
 }
 
-export default AuthLayout;
+export default UserLayout;

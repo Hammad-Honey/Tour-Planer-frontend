@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { signupUser } from "../../../APIs/auth"
+import { signupUser } from "../../APIs/auth"
 
 
 function Signup() {
@@ -99,7 +99,7 @@ function Signup() {
         <>
             <div className="flex items-center justify-center h-screen">
                 <div className="w-full max-w-120 p-2 mx-auto bg-zinc-100 drop-shadow-lg rounded-md ">
-                    <h1 className="p-4 text-center text-xl font-medium">User Signup Page</h1>
+                    <h1 className="p-4 text-center text-xl font-medium">User Signup</h1>
                     <div className="p-4">
                         <form onSubmit={handleSubmit} >
                             <div className="flex gap-5">

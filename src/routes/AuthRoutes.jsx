@@ -1,5 +1,5 @@
-import Login from "../Views/AuthViews/Login/Login";
-import Signup from "../Views/AuthViews/Signup/Signup";
+import Login from "../Views/AuthViews/Login";
+import Signup from "../Views/AuthViews/Signup";
 import ResetPassword from "../Views/AuthViews/ResetPassowrd";
 
 const AuthRoutes = [

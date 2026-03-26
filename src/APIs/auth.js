@@ -1,8 +1,11 @@
 
 const baseUrl = import.meta.env.VITE_BASE_URL
 export async function loginUser(formData) {
+
+    let res;
+
     try {
-        const res = await fetch(`${baseUrl}/auth/login`, {
+        res = await fetch(`${baseUrl}/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -11,10 +14,11 @@ export async function loginUser(formData) {
             credentials: "include"
 
         });
-        const json = await res.json();
+        
         if (!res.ok) {
-            console.log("res", json)
-            throw new Error(res.message || "login Failed")
+            const jsonRes=await res.json()
+            console.log(jsonRes)
+            throw new Error(jsonRes.message || "login Failed")
         }
 
         const data = await res.json()
@@ -22,11 +26,7 @@ export async function loginUser(formData) {
 
         return data;
     } catch (error) {
-        return {
-            success:false,
-            message:error.message,
-    
-        }
+        throw new Error(error.message || "Something went wrong");
 
     }
 }

@@ -4,20 +4,19 @@ import './index.css'
 import App from './App.jsx'
 import { Provider } from "react-redux"; // Importing Provider for Redux
 import { store } from "./store/store";  // Importing Redux Store Configuration
-import { AuthProvider } from './contexts/AuthContext.jsx'
 import { MapProvider } from "./contexts/MapContext";
 import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
   <Provider store={store}>
-    <AuthProvider>
+  
       <MapProvider>
         <BrowserRouter>
           <App />
         </BrowserRouter>
       </MapProvider>
-    </AuthProvider>
+
   </Provider>
 
   // </StrictMode>,

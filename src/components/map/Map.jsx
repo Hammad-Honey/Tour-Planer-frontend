@@ -4,12 +4,10 @@ import { useEffect, useRef } from "react";
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
 import { useMap } from "../../contexts/MapContext";
 
-
-
 function Map() {
     const mapContainer = useRef(null)
-    const { setMap } = useMap();
-    const { mapState,setMapState } = useMap()
+    const { setMap, mapState, setMapState} = useMap();
+
     useEffect(() => {
         const map = new mapboxgl.Map({
             container: mapContainer.current,
