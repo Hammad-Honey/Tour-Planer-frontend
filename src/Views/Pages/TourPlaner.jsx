@@ -2,6 +2,7 @@ import Map from "../../components/map/Map";
 import SearchBar from '../../components/map/SearchBar';
 import ResultView from '../../components/map/ResultView';
 import Filter from "../../components/map/Filter";
+import { useState } from "react";
 
 function TourPlaner() {
     return (

@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useMap } from "../../contexts/MapContext";
 
 const SearchBar = () => {
-  const { addMarkerWithPopup, clearMarkers, mapState } = useMap();
+  const { addMarkerWithPopup, clearMarkers } = useMap();
   const debounceRef = useRef(null);
   const [query, setQuery] = useState();
 
@@ -23,23 +23,6 @@ const SearchBar = () => {
     }
   };
 
-  const fetchCity = async () => {
-    // try {
-    //   const results = await getCityLocation(searchQuery);
-    //   console.log(results);
-    //   const payload = {
-    //     radius: 20,
-    //     lng: results.lon,
-    //     lat: results.lat
-    //   }
-    //   const places = await getHistoricLocations(payload)
-    //   console.log("places", places)
-    //   // You can also add markers here if needed
-    //   // results.forEach(item => addMarkerWithPopup(item));
-    // } catch (error) {
-    //   console.error("Error fetching city:", error);
-    // }
-  };
 
   return (
       <div>
