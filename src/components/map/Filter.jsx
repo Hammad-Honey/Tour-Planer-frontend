@@ -4,27 +4,22 @@ import { useFormik } from 'formik'
 
 
 function Filter() {
-    const array = Object.entries(filterGroup)
-    const createOptions = () => {
-        return array.map((type, key) => {
+
+    const options = () => {
+        return Object.keys(filterGroup).map((category) => {
             return (
-                <>
-                    <select
-                        name='kinds'
-                        value={formik.values.kinds}
-                        onChange={formik.handleChange}
-
-
-                    >
-
-                    </select>
-
-                </>
-            )
+                < option key={category} value={category} >
+                    {category.replace("_", " ").toLowerCase()}
+                </option >)
         })
+
     }
-    console.log(array);
-    console.log(array[0]);
+
+    const buttonsOptions=()=>{
+        return 0
+    }
+
+
 
     const { interesting_places, amusements, tourist_facilities, accommodation, nature, religion, landmarks } = filterGroup
 
@@ -47,20 +42,20 @@ function Filter() {
                     name="kinds"
                     value={formik.values.kinds}
                     onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                >
-                    <option>select an option</option>
-                    {interesting_places.map((place, index) => (
-                        <option key={index}>{place}</option>
-                    ))}
+                    className='rounded-full py-1 px-2 border-r-10 border-white bg-white shadow-xl/30'>
+                    <option>Select Category</option>
+                    {options()}
+
+
+
+
                 </select>
 
-                {formik.values.interesting_places &&
+                {
+                    formik.values.kinds &&
                     <button onClick={formik.resetForm} className="rounded-full py-1 px-2  bg-white shadow-xl/30">Reset</button>
                 }
-                {formik.touched.country && formik.errors.country && (
-                    <p>{formik.errors.country}</p>
-                )}
+
             </form>
 
         </>
