@@ -9,7 +9,7 @@ export async function getAreaName(lng, lat) {
 
 export async function searchSuggestions(query) {
   const res = await fetch(
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/{laho}.json?access_token=${accessToken}`,
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json??autocomplete=true&access_token=${accessToken}`,
   );
   const data = await res.json();
   return data.features;

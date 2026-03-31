@@ -78,3 +78,29 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
+
+// // 🔥 fetch places using fresh coords
+// dispatch(
+//   fetchLocations({
+//     radius: 20000,
+//     lng: lon,
+//     lat: lat,
+//     kinds: placesFilter || "interesting_places",
+//   }),
+// ).then((res) => {
+//   const locationObjects = res.payload.features;
+
+//   // 🔥 CLEAR OLD MARKERS FIRST
+//   clearMarkers();
+
+//   locationObjects.forEach((item) => {
+//     if (!item.properties.name) return;
+
+//     const marker = addMarker(mapRef.current, {
+//       lng: item.geometry.coordinates[0],
+//       lat: item.geometry.coordinates[1],
+//     });
+
+//     addMarkers(marker);
+//   });
+// });

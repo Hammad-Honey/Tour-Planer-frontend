@@ -1,85 +1,111 @@
-import { useRef, useEffect, useState } from "react";
+import { FaSearch } from "react-icons/fa";
+import { useRef, useState } from "react";
 import { useMap } from "../../contexts/MapContext";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCity, fetchLocations } from "../../store/slices/locationSlice";
 import { addMarker } from "../../utils/mapHelpers";
 import { searchSuggestions } from "../../APIs/mapServices";
 const SearchBar = () => {
-  const { markers, addMarkers, clearMarkers, placesFilter, mapRef } = useMap();
-  console.log("active markers on map", markers);
+  const { markersRef, addMarkers, clearMarkers, placesFilter, mapRef } = useMap();
+  const [suggestions, setSuggetions] = useState(null);
+  const [searchFieldValue, setSearchFieldValue] = useState("");
   const debounceRef = useRef(null);
   const cityData = useSelector((state) => state.map.cityData);
-  console.log(cityData ? `long: ${cityData.lon}` : "no data in cityData yet");
   const dispatch = useDispatch();
 
-  const dropMarkers = (map, lan, lat) => {
-    console.log("Edit Markers ", map, lan, lat);
+  const displaySuggestion = (suggestions) => {
+    return Object.values(suggestions).map((item) => {
+      console.log("Signle Suggestions", item);
+      if (
+        item.id.includes("place") ||
+        item.id.includes("country") ||
+        item.id.includes("locality") ||
+        item.id.includes("region")
+      ) {
+        return (
+          <>
+            <button
+              key={item.id}
+              onClick={() => {
+                console.log(item.geometry.coordinates);
+                setSearchFieldValue(item.text);
+              }}
+              className="p-3"
+            >
+              {item.place_name}
+            </button>
+          </>
+        );
+      }
+    });
   };
 
   //Handle Input Data
   const handleChange = async (e) => {
     const inputValue = e.target.value;
-    const searchOptions = await searchSuggestions(inputValue);
-    console.log("Serach Suggestions", searchOptions);
-
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
-
     if (inputValue.trim().length > 2) {
       debounceRef.current = setTimeout(() => {
-        dispatch(fetchCity({ city: inputValue })).then((result) => {
-          console.log("resutl on serachbar", result.payload);
-          const { lon, lat } = result.payload;
-          if (!result.payload) return;
-          mapRef.current?.flyTo({
-            center: [lon, lat],
-            zoom: 10,
-            essential: true,
-          });
+        searchSuggestions(inputValue).then((result) => {
+          setSuggetions(result); //setting the data in the state to be used by other functions
         });
-        if (cityData.lon) {
-          dispatch(
-            fetchLocations({
-              radius: 20000,
-              lng: cityData.lon,
-              lat: cityData.lat,
-              kinds: placesFilter || "interesting_places",
-            }),
-          ).then((result) => {
-            const locationObjects = result.payload.features;
-            console.log(locationObjects);
-            Object.values(locationObjects).forEach((items) => {
-              if (items.properties.name) {
-                const marker = addMarker(mapRef.current, {
-                  lng: items.geometry.coordinates[0],
-                  lat: items.geometry.coordinates[1],
-                });
-                addMarkers(marker);
-              }
-            });
-          });
-        }
       }, 500);
     }
   };
 
+  const handleSubmit = (e) => {
+    const input = document.getElementById("forminput").value;
+    console.log("form Submitted _input : ", input);
+    dispatch(fetchCity({ city: input })).then((result) => {
+      if (!result.payload) return;
+      const { lon, lat } = result.payload;
+      // move map
+      mapRef.current?.flyTo({
+        center: [lon, lat],
+        zoom: 10,
+        essential: true,
+      });
+    });
+  };
+
   return (
     <div className="relative">
-      <input
-        type="text"
-        placeholder="Search a destination"
-        list="suggestions"
-        onChange={(e) => {
-          handleChange(e);
+      <form
+        className="rounded-4xl outline-none bg-white shadow-xl/30"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(e);
         }}
-        className="rounded-full outline-none w-full bg-white shadow-xl/30 p-3 "
-      />
-      <datalist id="suggestions" className="absolute">
-        <option value={"Lahore"}>Lahore</option>
-        <option value={"Lahore"}>Larkana</option>
-        <option value={"Lahore"}>Larowal</option>
-      </datalist>
+      >
+        <div className="relative">
+          <input
+            id="forminput"
+            name="SearchField"
+            type="text"
+            placeholder="Search a destination"
+            onChange={(e) => {
+              setSearchFieldValue(e.target.value);
+              clearMarkers(); // 🔥 ADD THIS
+              handleChange(e);
+            }}
+            value={searchFieldValue}
+            className="p-3 outline-none w-full"
+          />
+
+          <div className="absolute  right-4 top-1/2 transform  -translate-y-1/2">
+            <button type="submit">
+              <FaSearch color="#827d7d" />
+            </button>
+          </div>
+        </div>
+        {suggestions ? (
+          <>
+            <div id="optionsDiv">{displaySuggestion(suggestions)}</div>
+          </>
+        ) : null}
+      </form>
     </div>
   );
 };

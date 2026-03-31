@@ -6,7 +6,7 @@ const MapContext = createContext();
 
 export function MapProvider({ children }) {
   const mapRef = useRef(null);
-  const [markers, setMarkers] = useState([]);
+  const markersRef = useRef([]);
   const [useLocation, setUserLocation] = useState({ lon: null, lat: null }); // Not useed so far
   const [placesFilter, setplacesFilter] = useState("");
   const [cityToVisit, setCityToVisit] = useState({});
@@ -35,17 +35,15 @@ export function MapProvider({ children }) {
     mapRef.current = mapInstance;
   };
 
-  const addMarkers = (mark) => {
-    console.log("Add Markers in Context : ");
-    setMarkers((prev) => [...prev, mark]);
+  const addMarkers = (marker) => {
+    markersRef.current.push(marker);
   };
 
   const clearMarkers = () => {
-    console.log("markers being remove");
-    markers.forEach((marker) => {
-      marker.remove();
-    });
-    setMarkers([]);
+    console.log("markers being removed");
+
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current = [];
   };
 
   return (
@@ -61,7 +59,7 @@ export function MapProvider({ children }) {
         resetPlaces,
         clearMarkers,
         addMarkers,
-        markers,
+        markersRef,
         setFilter,
         placesFilter,
       }}
