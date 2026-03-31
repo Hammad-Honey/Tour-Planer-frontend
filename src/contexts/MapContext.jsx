@@ -4,71 +4,75 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 const MapContext = createContext();
 
-
 export function MapProvider({ children }) {
-    const mapRef = useRef(null);
-    const [markers, setMarkers] = useState([])
-    const [placesFilter,setplacesFilter]=useState({
-        kinds:''
-    })
+  const mapRef = useRef(null);
+  const [markers, setMarkers] = useState([]);
+  const [useLocation, setUserLocation] = useState({ lon: null, lat: null }); // Not useed so far
+  const [placesFilter, setplacesFilter] = useState("");
+  const [cityToVisit, setCityToVisit] = useState({});
+  const [visitPlaces, setVisitPlaces] = useState({});
 
+  const setCity = (parms) => {
+    setCityToVisit(parms);
+  };
+  const resetCity = () => {
+    setCityToVisit({});
+  };
 
+  const setPlaces = (parms) => {
+    setVisitPlaces(parms);
+  };
 
-    const [mapState, setState] = useState({
-        center: [74.3587, 31.5204], // default center
-        zoom: 5,
+  const resetPlaces = () => {
+    setVisitPlaces({});
+  };
+
+  const setFilter = (filterValue) => {
+    setplacesFilter(filterValue);
+  };
+
+  const setMap = (mapInstance) => {
+    mapRef.current = mapInstance;
+  };
+
+  const addMarkers = (mark) => {
+    console.log("Add Markers in Context : ");
+    setMarkers((prev) => [...prev, mark]);
+  };
+
+  const clearMarkers = () => {
+    console.log("markers being remove");
+    markers.forEach((marker) => {
+      marker.remove();
     });
-    const setFilter=(filterValue)=>{
-        setplacesFilter((prev)=>({...prev,kinds:filterValue}))
-    }
-    const setMapState=(lng, lat, zoom)=>{
-        setState(prev=>({...prev ,center:[lng,lat], zoom:zoom}))
-     }
+    setMarkers([]);
+  };
 
-    const setMap = (mapInstance) => {
-        mapRef.current = mapInstance;
-    }
-
-    const addMarkerWithPopup = (location) => {
-        const {lat, lng, area_name, city, province, exploration_time}=location
-
-        const popup = new mapboxgl.Popup({ offset: 10 })
-            .setHTML(`
-                <div class="popup">
-                    <h3>${area_name}</h3>
-                    <p>Visit Time: ${exploration_time}</p>
-                </div>
-             `);
-
-        const marker = new mapboxgl.Marker({ color: "#880808" })
-            .setLngLat([lng, lat])
-            .setPopup(popup)
-            .addTo(mapRef.current);
-
-        
-        marker.placeData= {area_name, city,exploration_time}
-        setMarkers((prev) => [...prev, marker])
-
-
-        return marker;
-    };
-    const clearMarkers = () => {
-        markers.forEach((marker) => { marker.remove() })
-        setMarkers([])
-    }
-
-
-    return (
-
-        <MapContext.Provider value={{ setMap, addMarkerWithPopup, clearMarkers, markers, mapState,setMapState ,setFilter}}>
-            {children}
-        </MapContext.Provider>
-    )
+  return (
+    <MapContext.Provider
+      value={{
+        mapRef,
+        setMap,
+        setCity,
+        resetCity,
+        cityToVisit,
+        visitPlaces,
+        setPlaces,
+        resetPlaces,
+        clearMarkers,
+        addMarkers,
+        markers,
+        setFilter,
+        placesFilter,
+      }}
+    >
+      {children}
+    </MapContext.Provider>
+  );
 }
 
-
 export function useMap() {
-    const context = useContext(MapContext);
-    if (!context) throw new Error("useMap must be used within a MapProvider")
-    return context
+  const context = useContext(MapContext);
+  if (!context) throw new Error("useMap must be used within a MapProvider");
+  return context;
 }

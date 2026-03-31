@@ -3,10 +3,9 @@ import { useMap } from "../../contexts/MapContext";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCity, fetchLocations } from "../../store/slices/locationSlice";
 import { addMarker } from "../../utils/mapHelpers";
-import { searchSuggestions } from "../../APIs/mapServices";
+
 const SearchBar = () => {
   const { markers, addMarkers, clearMarkers, placesFilter, mapRef } = useMap();
-  console.log("active markers on map", markers);
   const debounceRef = useRef(null);
   const cityData = useSelector((state) => state.map.cityData);
   console.log(cityData ? `long: ${cityData.lon}` : "no data in cityData yet");
@@ -17,10 +16,8 @@ const SearchBar = () => {
   };
 
   //Handle Input Data
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const inputValue = e.target.value;
-    const searchOptions = await searchSuggestions(inputValue);
-    console.log("Serach Suggestions", searchOptions);
 
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -51,11 +48,12 @@ const SearchBar = () => {
             console.log(locationObjects);
             Object.values(locationObjects).forEach((items) => {
               if (items.properties.name) {
-                const marker = addMarker(mapRef.current, {
-                  lng: items.geometry.coordinates[0],
-                  lat: items.geometry.coordinates[1],
-                });
-                addMarkers(marker);
+                return addMarkers(
+                  addMarker(mapRef.current, {
+                    lng: items.geometry.coordinates[0],
+                    lat: items.geometry.coordinates[1],
+                  }),
+                );
               }
             });
           });
@@ -65,21 +63,16 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="relative">
+    <div>
       <input
         type="text"
         placeholder="Search a destination"
-        list="suggestions"
         onChange={(e) => {
+          clearMarkers();
           handleChange(e);
         }}
         className="rounded-full outline-none w-full bg-white shadow-xl/30 p-3 "
       />
-      <datalist id="suggestions" className="absolute">
-        <option value={"Lahore"}>Lahore</option>
-        <option value={"Lahore"}>Larkana</option>
-        <option value={"Lahore"}>Larowal</option>
-      </datalist>
     </div>
   );
 };
