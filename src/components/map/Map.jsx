@@ -6,7 +6,7 @@ import { useMap } from "../../contexts/MapContext";
 
 function Map() {
   const mapContainer = useRef(null);
-  const {setMap} = useMap();
+  const { setMap } = useMap();
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -24,16 +24,14 @@ function Map() {
     });
     map.addControl(geolocate, "top-right");
     geolocate.on("geolocate", (e) => {
-    //   const lat = e.coords.latitude;
-    //   const lng = e.coords.longitude;
+      //   const lat = e.coords.latitude;
+      //   const lng = e.coords.longitude;
     });
     map.addControl(new mapboxgl.NavigationControl());
-    
+
     setMap(map);
 
     return () => map.remove();
-
-
   }, []);
 
   return <div ref={mapContainer} style={{ height: "100vh" }}></div>;
